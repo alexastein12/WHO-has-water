@@ -1,4 +1,3 @@
-# WHO-has-water
 # WHO Water Access: Rural vs. Urban Inequalities
 
 **Overview**
