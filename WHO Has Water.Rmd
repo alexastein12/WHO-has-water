@@ -1,37 +1,31 @@
 ---
 title: "Project Part 1: WHO Has Water?" 
 subtitle: "Kylie Sharp, Lilya Zouaoui, and Alexa Stein Repository: https://github.com/UVA-STAT3080/project-kylie-alexa-lilya"
-fontsize: 12pt
-geometry: margin=1in
-urlcolor: black
 output: github_document
-header-includes:
-- \usepackage{setspace}
-- \singlespacing
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, highlight=FALSE)
 ```
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
+```{r, echo=TRUE, warning=FALSE, message=FALSE}
 library(ggplot2)
 library(patchwork)
 library(dplyr)
 library(tidyverse)
 clean_water <- read.csv("stat3080_projectdata.csv", header=TRUE)
 ```
-\section*{Introduction}
+# Introduction
 As countries develop, the assumption of their access to basic human rights should parallel. Access to water is a right, yet billions struggle to access it. The water crisis persists in society. In March 2024, 2.2 billion people lack access to safely manage water (UNICEF: 10 things you didn't know about water). Even those who do have access to water can contract diseases if the water is improperly treated. Safely managed water is crucial to a society. This issue is significant, as people are dying every day because of their lack of access to safe, clean water. Children are the most at risk with these water concerns, as every day, over 1000 children under 5 pass away from diseases linked to unsafe water, sanitation, and hygiene issues. In addition to these reasons, water is not only a necessity, but it is also a preventative measure for disease. Handwashing with soap and water is one of the simplest and most effective ways to prevent the spread of illness. Because 2.3 billion people lack handwashing capabilities due to a lack of water at home, this puts them at a disadvantage in preventing sickness. With these ideas in culmination, it cements the importance of water access to everyone. 
 
 UNICEF notes that rural populations are the most disadvantaged in the population due to a lack of access to safe water. They cite that 8 out of 10 people who lack even basic drinking water live in rural areas ("10 things you didn't know about water"). While there has been an increase in access and a trend upward in access, the inequalities between rural and urban communities are becoming prevalent. WHO, World Bank Group, and UNICEF created a report detailing the prevalence of accelerating progress to ensure safe drinking water for all. In their explicit plan, they outline recommendations for governments, financing, capacity development, data & information, innovation, where one of their suggestions was to improve the growth of professionalized service delivery that must be supported by capacity development, particularly in small and rural systems (“State of the World’s Drinking Water”). These organizations establish the importance of the gap between the urban and rural areas. 
 
 A UNICEF press release notes the need to continue reducing gaps in access to improved drinking water. They acknowledge that there has been an increase in drinking water and sanitation emergency issues that persist globally. In an interview with Dr. Maria Neira, a former WHO director for Public Health, Environmental and Social Determinants of Health, highlights the gaps in access depending on status: "The vast majority of those without improved sanitation are poorer people living in rural areas. Progress on rural sanitation- where it has occurred- has primarily benefited richer people, increasing inequalities.” She furthers the importance of these discrepancies in rural and urban access to water. Based on these qualified organizations, the question is whether there is a difference between these two groups. Is there a difference in the proportion of access to safely managed water (Available, Free from Contamination, and On Premises) between rural and urban settings in the sampled countries?
 
-\section*{Author Contributions}
+# Author Contributions
 I developed the ggplot2 boxplot visualizations for the exploratory data analysis and authored the final results and conclusion sections, translating the output of the paired permutation test into actionable public health insights.
 
-\section*{Data Summary}
+# Data Summary
 The data represents the world, broken into countries and territories. The data attempts to summarize each country's access to safely managed water, broken into three categories: Available, Free from Contamination, and On Premises. JMP first uses estimations. These estimations start with the nationally representative data sources. In this case, the nationally representative data display the safely managed water in each country. Most of this information is collected from household interviews by national statistical offices in each of these countries. They also use new Sustainable Development Goals (SDG) indicators for safely managed drinking water, created on a facility type classification, such as whether the water comes from piped/non-piped systems. After the collection, they utilize a simple linear regression estimation, which they use to “estimate the population using different levels of service using the JMP ladder for drinking water.”
 
 The data file created three possible values of residence: total, urban, and rural. The researcher removed the total value, as the project revolves around the urban and rural, not the combined values of these, as the total variable does not add any statistical meaning by averaging them together. In addition, the data read the safely managed elements (Available, Free from Contamination, and On Premises) as characters. To better represent the accuracy of the data, the researcher changed these value types to factors using the as.factor() function. This was necessary because these values are meant to be read as levels, where there is an order to their categorical variable, such as ascending order: Available, Free from Contamination, and On Premises. 
@@ -40,7 +34,7 @@ The data only focuses on already safely managed water, which could impact the di
 
 Based on the Mean Drinking Water Coverage by Residence Type and Safely Managed Element graph, there seems to be a difference in the mean coverage, depending on the residence type. The mean coverage of the available safely managed water is almost 15% lower. This indicates there may be a true difference between the two groups, possibly caused by the residence types. The research question proposes that the mean coverage is dependent on the residence type. Based on this plot's difference in values, depending on the residence type, it explores the notion of the discretion between rural and urban areas’ access to safely managed water; thus, the data appropriately answer the proposed research question.  
 
-\section*{Exploratory Data Analysis}
+# Exploratory Data Analysis
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 
@@ -51,7 +45,7 @@ water_dist <- ggplot(clean_water, aes(x= Residence.Type)) + geom_bar(fill= "ligh
   y= "Number of Residences", 
 )
 
-#Creating a bar graph to display the distributions of number of residence for both rural & urban areas.
+# Creating a bar graph to display the distributions of number of residence for both rural & urban areas.
 
 clean_water_summary <- clean_water %>%
   group_by (`Residence.Type`, `Safely.managed.element`) %>%
@@ -69,7 +63,7 @@ labs(
   fill= "Safely Managed Element"
 )
   
-#Creating a bar graph of the mean coverage for both rural and urban areas to display the difference of distribution between the safely managed elements. 
+# Creating a bar graph of the mean coverage for both rural and urban areas to display the difference of distribution between the safely managed elements. 
 
 country_avg_coverage <- clean_water %>%
   filter(`Residence.Type`%in% c("rural", "urban"))%>%
@@ -98,16 +92,15 @@ labs(
   fill= "Residence Type"
 )
 
-#Creating a bar graph of the top 10 and bottom 10 countries sampled to represent the water coverage by residence type to show the inequalities between the two categories.  
+# Creating a bar graph of the top 10 and bottom 10 countries sampled to represent the water coverage by residence type to show the inequalities between the two categories.  
 
 bxplot1 <- ggplot(clean_water, aes(x=Safely.managed.element, y=Coverage, fill=Safely.managed.element))+ geom_boxplot(alpha=0.6) + labs(title = "Coverage Distribution by Safely Managed Element", x="Safely Managed Element", y="Coverage (%)", fill="Safely Managed Element")
 
-#Creating a box plot of the coverage distribution by safely managed element. 
-
+# Creating a box plot of the coverage distribution by safely managed element. 
 
 bxplot2 <- ggplot(clean_water, aes(x=Residence.Type, y=Coverage, fill=Residence.Type)) + geom_boxplot(alpha=0.6) + labs(title = "Coverage Distribution by Residence Type", x="Residence Type", y="Coverage (%)", fill="Residence Type")
 
-#Creating a box plot of the coverage distribution by residence type. 
+# Creating a box plot of the coverage distribution by residence type. 
 
 finalbxplot1 <- bxplot1 + geom_boxplot(alpha=0.6) + labs(title = "Coverage Distribution by Safely Managed Element", x="Safely Managed Element", y="Coverage (%)", fill="Safely Managed Element")
 
@@ -131,7 +124,7 @@ five_number
 
 ```
 
-\section*{Exploratory Data Analysis Summary}
+# Exploratory Data Analysis Summary
 
 The numerical summary of the safely managed driving water coverage shows a wide range across counties, from as low as 51% to going all the way as 100%. The median of 81% indicates that at least half the countries within this dataset have that level of coverage, but the mean being slightly lower indicates a slight left skew. This means there are a few countries that have much lower coverage, which is bringing the average down a little. From the visual graphs, the display of the top 10 and bottom 10 countries reinforces this variability. A few countries show a near-universal access, while the remainder struggle much more to provide basic levels of safe drinking water. We can see less coverage between rural areas than in urban regions through the mean coverage by residence type plot. This pattern shows that there is an unequal distribution based on residence type that favors more urban populations. The distribution plot shows that there is around an equal number of urban and rural areas, showing that the sample sizes are similar, thus appropriate to compare the two. The box plot gives us more specific data on this discrepancy between the two regions of urban and rural. The average coverage for urban areas is much higher, almost at the same level as the Q3, of the rural region. The points on the dot represent outliers in the lower end of the urban blot, whereas the fact that the rural box plot does not show that means that the lower end of the plot is not seen as outliers, as it’s a much more frequent occurrence of having lower coverage. 
 
@@ -142,14 +135,14 @@ Contextually, these findings show that the rural-urban divide remains a big defi
 Overall the EDA indicates some clear patterns which show: Urban regions have substantially higher access to safely managed drinking water than rural regions. 
 Rural populations are disproportionately disadvantaged as their count of those who live in rural areas is not much lower than those in urban areas, but they are much more at risk for not having proper water coverage. Global inequality in water access is apparent; however, there are also signs of water being accessible, but this water is not necessarily fully clean and lacks any contaminants. These show that safely managing water access is not only a global issue, but it's also very dependent on where one lives. These show the implications for the need for more targeted rural water interventions and more funding to go towards infrastructure investments in these areas, rather than just focusing on urban areas since they have more traffic. 
 
-\section*{Methods}
+# Methods
 To test our hypothesis we used a paired permutation test, where: Null Hypothesis: The true proportion of access to safely managed water in rural settings is equal to the proportion in urban settings. Alternative Hypothesis: The proportion of access to safely managed water in rural areas is not equal to the proportion in urban settings.
 
 A permutation test is a non-parametric, assumption light statistical test that assesses the null hypothesis by repeatedly testing and shuffling the values of data between groups to create a null distribution.The use of the permutation test is relevant for a two-sample data set that is dependent. The use of a non-parametric over a parametric is used since it does not assume the underlying distribution of the proportions is normal. In the data, many countries display a range of extreme values ranging between 0 and 1. The normal approximations required by classical approaches are often violated in cases like that, so to avoid violating assumptions, the permutation is a better choice, as it will provide statistically sound inferences for the difference in proportions. Within the permutation test, the researchers are sampling rural and urban areas, meaning that the samples are paired; thus, the use of the paired permutation test is appropriate.Since we are using permutation tests which are non-parametric we don't need to worry about verifying the distributional or sample-size assumptions.
 
 The first assumption is independence. We need to check if our pairs (countries) are independent to ensure there are no repeated measurements and that the countries don't influence each other. Since each country only appears once in the dataset, the assumption for independence is met. Next we look at the Exchangeability assumption under the null needs to be met as the next assumption as stated above. If rural and urban access were truly equal, the sign of each paired difference would be random. Since we see that both measurements come from the same country and are directly comparable the sign-flipping becomes valid. The third assumption is that they have to have an equal measurement scale. Since both sets of data for rural and urban estimates use the same WHO/UNICEF methodology we can compare the two under equal scales. 
 
-\section*{Results}
+# Results
 ```{r, echo = FALSE, warning=FALSE, message=FALSE}
 clean_water_prop <- clean_water |>
   
@@ -170,7 +163,7 @@ clean_water_prop <- clean_water |>
   Rural_Prop = Prop_rural,
   Urban_Prop = Prop_urban
 ) |>
-#The proportion difference is the data used in the paired test
+# The proportion difference is the data used in the paired test
   mutate(
     Prop_difference = Urban_Prop- Rural_Prop
 )
@@ -195,7 +188,7 @@ p_val
 observed_mean_diff
 ```
 
-\section*{Conclusions}
+# Conclusions
 
 The test statistic (the observed mean difference in coverage) is about 13.05, which means that, on average, urban areas have 13.05 percentage points higher clean-water coverage than rural areas. None of the permuted differences were as extreme as the observed value, the p-value result was 0, meaning there is statistically significant evidence that urban and rural clean-water coverage differ. This is not due to random sampling variability since with a large sample of permutations we would not see a difference larger than the observed p value. Overall, the test was statistically significant and it provides enough statistical evidence to show that the proportion of populations with access to safely managed water differs between rural and urban settings. Our results reinforce WHO and UNICEF claims that people living in rural areas systematically experience worse access to safely managed water (available on premises and free from contamination). A gap of about 13 percentage points is large: even when national coverage improves, those gains are not distributed evenly, and rural communities are left behind, with further issues for health, hygiene, and economic opportunity occurring later on.
 
@@ -203,12 +196,7 @@ One limitation is our data is that we are analyzing a summary values per country
 
 Our analysis still offers a level of evidence that is consistent with global reports. Even if there may be some variability in standards, the majority of the countries follow a standardized WHO and UNICEF definitions within the data. This means that the pattern we see in our results can be generalized beyond our specific sample even if the exact size of the gap varies. Generalizing from a policy perspective is noting that simply rating national averages is not sufficient. We need to see more targeted investments in more rural water infrastructure and delivery to actually see more progress in equitable water coverage rather than just increasing disparities across regions.  
 
-
-
-\newpage
-
-
-\section*{References}
+# References
 10 things you didn’t know about water. UNICEF. (2024, March 14). https://www.unicef.org/stories/10-things-you-didnt-know-about-water
 
 Methods. Methods | JMP. (n.d.). https://washdata.org/topics/methods 
